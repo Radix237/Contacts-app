@@ -4,7 +4,8 @@
   "description": "Basic app for storing contacts",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "author": "Radek Netolicky",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "mongoose": "^6.12.7",
+    "nodemon": "^3.1.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
   }

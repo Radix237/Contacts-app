@@ -11,7 +11,7 @@ const port = 3000;
 const path = require("path");
 const db = require("./config/mongoose");
 const Contact = require("./models/contact");
-const populateContacts = require("./seedDb/seed");
+const seedContacts = require("./seedDb/seed");
 const app = express();
 
 // Middleware pro session
@@ -63,6 +63,16 @@ passport.use(
   )
 );
 
+/*
+app.use(async (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    console.log("aaaaaa")
+    await populateContacts();
+  }
+  next();
+});
+*/
+
 // Serializace a deserializace uživatele pro uložení do session
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -81,10 +91,10 @@ app.get("/", async function (req, res) {
   try {
     let contacts = [];
 
-    // Pokud je uživatel přihlášen, načti kontakty z databáze
+    // Pokud je uživatel přihlášen, načti jen kontakty, které vytvořil aktuální uživatel
     if (req.isAuthenticated()) {
-      contacts = await Contact.find({});
-    }
+      contacts = await Contact.find({ createdBy: req.user._id });
+    } else await seedContacts()
 
     // Vyrenderování úvodní stránky s kontakty
     return res.render("index", {
@@ -103,16 +113,15 @@ app.get("/login", async (req, res, next) => {
   // přesměruj nepřihlášeného uživatele na domovskou stránku
   if (!req.user) return res.redirect("/");
 
-  await populateContacts();
-
-  // vygeneruj uživateli stránku
-  const contacts = await Contact.find();
+  // Zde by se měly zobrazit pouze kontakty aktuálně přihlášeného uživatele
+  const contacts = await Contact.find({ createdBy: req.user._id });
   return res.render("index", {
     title: "Contacts List",
     isLogged: true,
     contact_list: contacts,
   });
 });
+
 
 // přihlas uživatele lokální strategií a přesměruj na authentizovanou zonu, jinak přesměruj zpět na domovskou
 app.post("/login",
@@ -156,6 +165,8 @@ const isLoggedIn = (req, res, next) => {
 };
 
 app.post("/create-contact", isLoggedIn, function (req, res) {
+  const currentUser = req.user; // Získání aktuálně přihlášeného uživatele
+
   Contact.create(
     {
       name: req.body.name,
@@ -163,6 +174,7 @@ app.post("/create-contact", isLoggedIn, function (req, res) {
       email: req.body.email,
       organization: req.body.organization,
       notes: req.body.notes,
+      createdBy: currentUser._id // Přiřazení ID aktuálně přihlášeného uživatele k nově vytvořenému kontaktu
     },
     function (err, newContact) {
       if (err) {
@@ -174,6 +186,7 @@ app.post("/create-contact", isLoggedIn, function (req, res) {
     }
   );
 });
+
 
 app.post("/edit-contact/:id", isLoggedIn, function (req, res) {
   const id = req.params.id;

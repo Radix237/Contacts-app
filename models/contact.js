@@ -11,7 +11,11 @@ const contactSchema = new mongoose.Schema({
     },
     email: String,
     organization: String,
-    notes: String
+    notes: String,
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 const Contact = mongoose.model("Contact", contactSchema);
