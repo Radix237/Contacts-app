@@ -1,0 +1,2 @@
+dodělat logiku přidání kontaktu po přihlášení a aby to nešlo při nepřihlášení
+dodělat responzivitu

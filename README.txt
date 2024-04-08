@@ -1,0 +1,1 @@
+mimo to doporučuju zabezpečit ty akce vytvoření, upravy a odstranení kontaktu podle komentáře co jsem ti tam nechal

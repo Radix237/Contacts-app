@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= locals.title %></title>
+    <script src="https://kit.fontawesome.com/471e90c1fc.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        @media (max-width: 992px) {
+            .fixed-bottom {
+                position: static !important;
+        }
+}
+    </style>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+    
+    <div class="container mt-5">
+        <div class="row mt-3">
+            <div class="col-sm-4" id="name-span" style="text-align: center;">
+                <span><h5 class="d-none d-sm-block">Name and Surname</h5></span>
+            </div>
+            <div class="col-sm-4" id="phone-span" style="text-align: center;">
+                <span><h5 class="d-none d-sm-block">Phone</h5></span>
+            </div>
+            <div class="col-sm-4" id="options-span" style="text-align: center;">
+                <span><h5 class="d-none d-sm-block">Options</h5></span>
+            </div>
+        </div>
+        <% for(let i of contact_list) { %>
+            <div class="row mt-3">
+                <div class="col-sm-4 col-6 mb-2" style="text-align: center;">
+                    <span class="d-sm-none"><b>Name:&nbsp;</b></span><%= i.name %>
+                </div>
+                <div class="col-sm-4 col-6" style="text-align: center;">
+                    <span class="d-sm-none"><b>Phone:&nbsp;</b></span><%= i.phone %>
+                </div>
+                <div class="col-sm-4" style="text-align: center;">
+                    <div class="btn-group" role="group" aria-label="Contact actions">
+                        <a href="/delete-contact/?id=<%= i._id %>" class="btn btn-danger mr-2">
+                            <i class="fas fa-window-close"></i> Delete
+                        </a>
+                        <button class="btn btn-info mr-2" data-toggle="modal" data-target="#moreInfoModal<%= i._id %>">More info</button>
+                        <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#editContactModal<%= i._id %>">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    <div class="modal fade" style="text-align: left;" id="moreInfoModal<%= i._id %>" tabindex="-1" role="dialog" aria-labelledby="moreInfoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="moreInfoModalLabel">More info</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Name and Surname:</strong> <%= i.name %></p>
+                                    <p><strong>Phone:</strong> <%= i.phone %></p>
+                                    <p><strong>Email:</strong> <%= i.email %></p>
+                                    <p><strong>Organization:</strong> <%= i.organization %></p>
+                                    <p><strong>Notes:</strong> <%= i.notes %></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal fade" style="text-align: left;" id="editContactModal<%= i._id %>" tabindex="-1" role="dialog" aria-labelledby="editContactModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editContactModalLabel">Edit Contact</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Formulář pro úpravu kontaktu -->
+                                    <form action="/edit-contact/<%= i._id %>" method="POST">
+                                        <div class="form-group">
+                                            <label for="editName"><strong>Name and Surname</strong></label>
+                                            <input type="text" class="form-control" id="editName" name="name" value="<%= i.name %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editPhone"><strong>Phone</strong></label>
+                                            <input type="text" class="form-control" id="editPhone" name="phone" value="<%= i.phone %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editEmail"><strong>Email</strong></label>
+                                            <input type="email" class="form-control" id="editEmail" name="email" value="<%= i.email %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editOrganization"><strong>Organization</strong></label>
+                                            <input type="text" class="form-control" id="editOrganization" name="organization" value="<%= i.organization %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editNotes"><strong>Notes</strong></label>
+                                            <textarea class="form-control" id="editNotes" name="notes"><%= i.notes %></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+    
+
+    <footer class="bg-primary text-white mt-5 fixed-bottom">
+        <div class="container text-center pt-2">
+            <p>
+                <i> Copyright &copy; <script>document.write(new Date().getFullYear())</script> Radek Netolický, Fakulta informatiky a managementu, UHK <br>
+                Web slouží jako zápočtová práce.<br>
+                <a class="text-white" href="mailto:radek.netolicky@uhk.cz">radek.netolicky@uhk.cz</a>
+            </i>
+            </p>
+        </div>
+    </footer>
+    
+    
+    
+    <%- include('partials/navbar-modals') %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Zachycení kliknutí na odkaz "Register" a zobrazení registračního modálního formuláře
+        document.getElementById('registerLink').addEventListener('click', function(event) {
+            // Zabraňuje přechod na URL odkaz
+            event.preventDefault();
+            $('#registerModal').modal('show');
+        });
+
+        // Zachycení kliknutí na odkaz "Login" a zobrazení přihlašovacího modálního formuláře
+        document.getElementById('loginLink').addEventListener('click', function(event) {
+            // Zabraňuje přechod na URL odkaz
+            event.preventDefault();
+            $('#loginModal').modal('show');
+        });
+    </script>
+<script>
+    
+</script>
+</body>
+</html>

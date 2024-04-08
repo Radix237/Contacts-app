@@ -1,0 +1,22 @@
+{
+  "name": "contacts-app",
+  "version": "1.0.0",
+  "description": "Basic app for storing contacts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Radek Netolicky",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "mongoose": "^6.12.7",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
+  }
+}
