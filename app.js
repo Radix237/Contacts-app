@@ -79,19 +79,17 @@ passport.deserializeUser(async (id, done) => {
 
 app.get("/", async function (req, res) {
   try {
-    // přesměruj přihlášeného uživatele do autentizované zony
-    if (req.user) return res.redirect("/login");
+    let contacts = [];
 
-    // Vynulování databáze
-    await Contact.deleteMany({});
-
-    // Načtení kontaktů z databáze
-    const contacts = await Contact.find({});
+    // Pokud je uživatel přihlášen, načti kontakty z databáze
+    if (req.isAuthenticated()) {
+      contacts = await Contact.find({});
+    }
 
     // Vyrenderování úvodní stránky s kontakty
     return res.render("index", {
       title: "Contacts List",
-      isLogged: false,
+      isLogged: req.isAuthenticated(),
       contact_list: contacts,
     });
   } catch (error) {
@@ -99,6 +97,7 @@ app.get("/", async function (req, res) {
     return res.status(500).send("Error occurred while fetching contacts.");
   }
 });
+
 
 app.get("/login", async (req, res, next) => {
   // přesměruj nepřihlášeného uživatele na domovskou stránku
@@ -143,16 +142,11 @@ app.post("/register", async (req, res) => {
 // Logout cesta
 app.get("/logout", function (req, res) {
   req.logout(() => {
-    // Vynulování databáze při odhlášení uživatele
-    Contact.deleteMany({}, function (err) {
-      if (err) {
-        console.log("Error while logging out:", err);
-      }
-      res.redirect("/");
-      console.log("\x1b[31mSuccessfully logged out\x1b[0m");
-    });
+    res.redirect("/");
+    console.log("\x1b[31mSuccessfully logged out\x1b[0m");
   });
 });
+
 
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
