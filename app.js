@@ -28,6 +28,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(passport.authenticate("session"));
 
+// Middleware pro Flash upozornění
 app.use(flash());
 
 app.use((req, res, next) => {
@@ -77,6 +78,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+// Routa pro defaultní cestu
 app.get("/", async function (req, res) {
   try {
     let contacts = [];
@@ -106,7 +108,7 @@ app.get("/", async function (req, res) {
 app.get("/login", async (req, res, next) => {
   if (!req.user) return res.redirect("/");
 
-  // Zde by se měly zobrazit pouze kontakty aktuálně přihlášeného uživatele
+  // Zobrazení pouze kontaktů, které vytvořil tento uživatel
   const contacts = await Contact.find({ createdBy: req.user._id });
   return res.render("index", {
     title: "Contacts List",
@@ -116,7 +118,7 @@ app.get("/login", async (req, res, next) => {
 });
 
 
-// přihlas uživatele lokální strategií a přesměruj na authentizovanou zonu, jinak přesměruj zpět na domovskou
+// Přihlas uživatele lokální strategií a přesměruj na authentizovanou zonu, jinak přesměruj zpět na domovskou
 app.post("/login",
   passport.authenticate("local", {
     successReturnToOrRedirect: "/login",
@@ -125,7 +127,7 @@ app.post("/login",
   })
 );
 
-// Cesta pro registraci
+// Routa pro registraci
 app.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -141,7 +143,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// Logout cesta
+// Routa pro odhlášení
 app.get("/logout", function (req, res) {
   req.logout(() => {
     res.redirect("/");
@@ -149,7 +151,7 @@ app.get("/logout", function (req, res) {
   });
 });
 
-
+// Kontrola, zda je uživatel přihlášen
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -157,8 +159,10 @@ const isLoggedIn = (req, res, next) => {
   res.redirect("/");
 };
 
+// Routa pro vytvoření kontaktu
 app.post("/create-contact", isLoggedIn, function (req, res) {
-  const currentUser = req.user; // Získání aktuálně přihlášeného uživatele
+  // Získání aktuálně přihlášeného uživatele
+  const currentUser = req.user;
 
   Contact.create(
     {
@@ -167,7 +171,7 @@ app.post("/create-contact", isLoggedIn, function (req, res) {
       email: req.body.email,
       organization: req.body.organization,
       notes: req.body.notes,
-      createdBy: currentUser._id // Přiřazení ID aktuálně přihlášeného uživatele k nově vytvořenému kontaktu
+      createdBy: currentUser._id
     },
     function (err, newContact) {
       if (err) {
@@ -180,7 +184,7 @@ app.post("/create-contact", isLoggedIn, function (req, res) {
   );
 });
 
-
+// Routa pro úpravu kontaktu
 app.post("/edit-contact/:id", isLoggedIn, function (req, res) {
   const id = req.params.id;
   Contact.findByIdAndUpdate(
@@ -202,6 +206,7 @@ app.post("/edit-contact/:id", isLoggedIn, function (req, res) {
   );
 });
 
+// Routa pro smazání kontaktu
 app.get("/delete-contact", isLoggedIn, function (req, res) {
   let id = req.query.id;
   Contact.findByIdAndDelete(id, function (err) {
