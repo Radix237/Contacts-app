@@ -3,11 +3,10 @@ const Contact = require("../models/contact");
 // Funkce pro naplnění kontaktů v databázi
 async function seedContacts() {
     try {
-        console.log("Populating contacts...");
         const contactsData = [
             {
                 name: "Štěpán Netolický",
-                phone: "123456789",
+                phone: "+420123456789",
                 email: "wolfys@seznam.cz",
                 organization: "UHK",
                 notes: "Spolužák",
@@ -15,7 +14,7 @@ async function seedContacts() {
             },
             {
                 name: "Jiří Dostál",
-                phone: "987654321",
+                phone: "+420987654321",
                 email: "dostalji@uhk.cz",
                 organization: "UHK",
                 createdBy: null
@@ -23,7 +22,7 @@ async function seedContacts() {
             },
             {
                 name: "Matouš Svárovský",
-                phone: "555555555",
+                phone: "+420555555555",
                 email: "svaroma@seznam.cz",
                 organization: "UHK",
                 notes: "Spolužák",
@@ -31,21 +30,21 @@ async function seedContacts() {
             },
             {
                 name: "Jiří Žák",
-                phone: "987333321",
+                phone: "+420987333321",
                 email: "zakjir@uhk.cz",
                 organization: "UHK",
                 createdBy: null
             },
             {
                 name: 'David Netolický',
-                phone: '735918133',
+                phone: '+420735918133',
                 email: 'memeli.netolicky@seznam.cz',
                 organization: 'Karate Club Mémeli Kameničky',
                 createdBy: null
             },
             {
                 name: "Bára Muchová",
-                phone: "785333236",
+                phone: "+420785333236",
                 email: "barcekmuchu@seznam.cz",
                 organization: "Atletika Ostroměř",
                 notes: "Docela frajer",
@@ -53,14 +52,14 @@ async function seedContacts() {
             },
             {
                 name: "Ondřej Přetržitý",
-                phone: "203038435",
+                phone: "+420203038435",
                 email: "ondrap@seznam.cz",
                 organization: "Práce",
                 createdBy: null
             },
             {
                 name: "Iveta Blbomyslná",
-                phone: "050203051",
+                phone: "+420050203051",
                 email: "ivousek@seznam.cz",
                 createdBy: null
             },

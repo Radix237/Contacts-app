@@ -63,16 +63,6 @@ passport.use(
   )
 );
 
-/*
-app.use(async (req, res, next) => {
-  if (!req.isAuthenticated()) {
-    console.log("aaaaaa")
-    await populateContacts();
-  }
-  next();
-});
-*/
-
 // Serializace a deserializace uživatele pro uložení do session
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -94,7 +84,11 @@ app.get("/", async function (req, res) {
     // Pokud je uživatel přihlášen, načti jen kontakty, které vytvořil aktuální uživatel
     if (req.isAuthenticated()) {
       contacts = await Contact.find({ createdBy: req.user._id });
-    } else await seedContacts()
+    } else {
+      // Spustit seed jen pokud uživatel není přihlášen
+      await seedContacts();
+      contacts = await Contact.find();
+    }
 
     // Vyrenderování úvodní stránky s kontakty
     return res.render("index", {
@@ -110,7 +104,6 @@ app.get("/", async function (req, res) {
 
 
 app.get("/login", async (req, res, next) => {
-  // přesměruj nepřihlášeného uživatele na domovskou stránku
   if (!req.user) return res.redirect("/");
 
   // Zde by se měly zobrazit pouze kontakty aktuálně přihlášeného uživatele
@@ -193,6 +186,8 @@ app.post("/edit-contact/:id", isLoggedIn, function (req, res) {
   Contact.findByIdAndUpdate(
     id,
     {
+      name: req.body.name,
+      phone: req.body.phone,
       email: req.body.email,
       organization: req.body.organization,
       notes: req.body.notes,

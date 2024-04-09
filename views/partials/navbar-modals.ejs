@@ -16,7 +16,9 @@
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="text" class="form-control" id="phone" name="phone" required>
+                        <input type="text" class="form-control" id="phone" name="phone" minlength="13" maxlength="13" pattern="^\+\d{1,3}\d{9}$"
+                        required>
+                        <small class="form-text text-muted">Zadejte telefonní číslo ve správném formátu včetně mezinárodní předvolby.</small>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -56,7 +58,8 @@
                     </div>
                     <div class="form-group">
                         <label for="registerPassword">Password</label>
-                        <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Password" required>
+                        <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Password" minlength="6" pattern="(?=.*\d)(?=.*[A-Z]).{6,}" required>
+                        <small class="form-text text-muted">Minimálně 6 znaků dlouhé, alespoň jedno velké písmeno a jedna číslice.</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Register</button>
                 </form>
